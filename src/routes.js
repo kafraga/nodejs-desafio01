@@ -29,8 +29,7 @@ export const routes = [
     method: "POST",
     path: buildRoutePath("/tasks"),
     handler: (req, res) => {
-      const { title, description, completed_at, created_at, updated_at } =
-        req.body;
+      const { title, description } = req.body;
 
       const task = {
         id: randomUUID(),
@@ -41,8 +40,12 @@ export const routes = [
         updated_at: getUpdatedDate(),
       };
 
-      database.insert("tasks", task);
-      return res.writeHead(201).end();
+      if (title && description) {
+        database.insert("tasks", task);
+        return res.writeHead(201).end();
+      } else {
+        return res.writeHead(400).end();
+      }
     },
   },
   {
